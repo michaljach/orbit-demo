@@ -37,6 +37,8 @@ export const connect = async () => {
     );
     await db.load();
 
+    console.log(db.address);
+
     // console.log(db.address);
     // const hash = await db.add("world");
 

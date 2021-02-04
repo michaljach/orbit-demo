@@ -18,6 +18,10 @@ class AppContainer extends Component {
       elem.innerHTML = `Peers: ${networkPeers.length} / ${databasePeers.length}`;
     });
 
+    db.events.on("replicated", (address) => {
+      console.log(db.iterator({ limit: -1 }).collect());
+    });
+
     console.log(db.iterator({ limit: -1 }).collect());
   }
 
