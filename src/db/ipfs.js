@@ -38,7 +38,7 @@ export const connect = async () => {
     await db.load();
 
     // console.log(db.address);
-    // // const hash = await db.add("world");
+    // const hash = await db.add("world");
 
     // const networkPeers = await ipfs.swarm.peers();
     // const databasePeers = await ipfs.pubsub.peers(db.address.toString());

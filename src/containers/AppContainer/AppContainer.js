@@ -17,6 +17,8 @@ class AppContainer extends Component {
       databasePeers = await ipfs.pubsub.peers(db.address.toString());
       elem.innerHTML = `Peers: ${networkPeers.length} / ${databasePeers.length}`;
     });
+
+    console.log(db.iterator({ limit: -1 }).collect());
   }
 
   template() {
