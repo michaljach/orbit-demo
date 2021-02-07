@@ -2,6 +2,10 @@ export class Component extends HTMLElement {
   constructor() {
     super();
 
+    this.render();
+  }
+
+  render() {
     const template = document.createElement("template");
     template.innerHTML = this.template();
 

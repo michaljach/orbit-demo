@@ -1,28 +1,23 @@
 import { Component } from "../../shared/component";
 import { connect } from "../../db/ipfs";
+import "../../components/EntryComponent/EntryComponent";
+import "../../containers/AddContainer/AddContainer";
 
 class AppContainer extends Component {
   async connectedCallback() {
-    const { db, ipfs } = await connect();
+    const { db } = await connect();
 
-    let networkPeers = await ipfs.swarm.peers();
-    let databasePeers = await ipfs.pubsub.peers(db.address.toString());
+    this.list = db
+      .iterator({ limit: -1 })
+      .collect()
+      .map((item) => {
+        return `<entry-component text="${item.payload.value.text}"></entry-component>`;
+      })
+      .join("");
 
-    const elem = this.shadowRoot.getElementById("peers");
-    elem.innerHTML = `Peers: ${networkPeers.length} / ${databasePeers.length}`;
-
-    db.events.on("peer", async () => {
-      console.log("new peer");
-      networkPeers = await ipfs.swarm.peers();
-      databasePeers = await ipfs.pubsub.peers(db.address.toString());
-      elem.innerHTML = `Peers: ${networkPeers.length} / ${databasePeers.length}`;
-    });
-
-    db.events.on("replicated", (address) => {
-      console.log(db.iterator({ limit: -1 }).collect());
-    });
-
-    console.log(db.iterator({ limit: -1 }).collect());
+    this.shadowRoot.getElementById("list").innerHTML = this.list;
+    const addContainer = this.shadowRoot.getElementById("add-container");
+    addContainer.db = db;
   }
 
   template() {
@@ -35,8 +30,9 @@ class AppContainer extends Component {
         }
       </style>
 
-      <h1>Decentralized peer2peer database</h1>
-      <div id="peers"></div>
+      <h1>Golf 🌎</h1>
+      <add-container id="add-container"></add-container>
+      <div id="list"></div>
     `;
   }
 }
