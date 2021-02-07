@@ -3,6 +3,30 @@ import OrbitDB from "orbit-db";
 
 export let ipfs;
 export let db;
+let orbitdb;
+
+const connectOrbitDb = async (new_id) => {
+  orbitdb = await OrbitDB.createInstance(ipfs);
+
+  db = await orbitdb.log(
+    "/orbitdb/zdpuAwbfEnbrP19F97rDdahx3o6CLG618a6asP2QeT4jhaiXm/1213",
+    {
+      accessController: {
+        type: "orbitdb",
+        write: [],
+      },
+    }
+  );
+
+  if (new_id) {
+    await db.access.grant("write", new_id);
+  }
+
+  await db.load();
+  console.log(db.address.toString());
+
+  return db;
+};
 
 export const connect = async () => {
   try {
@@ -29,23 +53,19 @@ export const connect = async () => {
       },
     });
 
-    const orbitdb = await OrbitDB.createInstance(ipfs);
-
-    db = await orbitdb.log(
-      "/orbitdb/zdpuAwbfEnbrP19F97rDdahx3o6CLG618a6asP2QeT4jhaiXm/1213",
-      {
-        accessController: {
-          type: "orbitdb",
-          write: [],
-        },
-      }
-    );
-
-    await db.load();
-    console.log(db.address.toString());
+    const db = await connectOrbitDb();
 
     return { db, ipfs };
   } catch (e) {
     console.error(e);
   }
+};
+
+export const disconnect = async () => {
+  return await orbitdb.disconnect();
+};
+
+export const authorize = async (id) => {
+  await disconnect();
+  connectOrbitDb(id);
 };

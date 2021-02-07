@@ -6,8 +6,11 @@ class AddContainer extends Component {
     const textarea = this.shadowRoot.getElementById("textarea");
     const addButton = this.shadowRoot.getElementById("add-button");
 
-    addButton.addEventListener("click", () => {
-      db.add({ text: textarea.value });
+    addButton.addEventListener("click", async () => {
+      const result = await db.add({ text: textarea.value });
+      if (result) {
+        alert("added!");
+      }
     });
   }
 

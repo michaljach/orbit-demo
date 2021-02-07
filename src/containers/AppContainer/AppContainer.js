@@ -1,5 +1,5 @@
 import { Component } from "../../shared/component";
-import { connect } from "../../db/ipfs";
+import { connect, disconnect, authorize } from "../../db/ipfs";
 import "../../components/EntryComponent/EntryComponent";
 import "../../containers/AddContainer/AddContainer";
 
@@ -29,6 +29,16 @@ class AppContainer extends Component {
     this.shadowRoot.getElementById("list").innerHTML = this.list;
     const addContainer = this.shadowRoot.getElementById("add-container");
     addContainer.db = db;
+
+    this.shadowRoot.getElementById(
+      "peer"
+    ).innerHTML = `<input type="text" value="${db.identity.id}">`;
+
+    this.shadowRoot
+      .getElementById("auth")
+      .addEventListener("click", async () => {
+        authorize(this.shadowRoot.getElementById("auth-id").value);
+      });
   }
 
   template() {
@@ -42,8 +52,11 @@ class AppContainer extends Component {
       </style>
 
       <h1>Golf 🌎</h1>
+      <div id="peer"></div>
       <add-container id="add-container"></add-container>
       <div id="list"></div>
+      <input id="auth-id" type="text" value="">
+      <button id="auth">authorize</button>
     `;
   }
 }
