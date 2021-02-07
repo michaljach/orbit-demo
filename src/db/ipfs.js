@@ -13,7 +13,7 @@ const connectOrbitDb = async (new_id) => {
     {
       accessController: {
         type: "orbitdb",
-        write: [],
+        write: [orbitdb.identity.id],
       },
     }
   );
