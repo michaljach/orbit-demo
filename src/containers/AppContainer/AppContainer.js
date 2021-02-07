@@ -15,6 +15,17 @@ class AppContainer extends Component {
       })
       .join("");
 
+    db.events.on("replicated", (address) => {
+      this.list = db
+        .iterator({ limit: -1 })
+        .collect()
+        .map((item) => {
+          return `<entry-component text="${item.payload.value.text}"></entry-component>`;
+        })
+        .join("");
+      this.shadowRoot.getElementById("list").innerHTML = this.list;
+    });
+
     this.shadowRoot.getElementById("list").innerHTML = this.list;
     const addContainer = this.shadowRoot.getElementById("add-container");
     addContainer.db = db;
